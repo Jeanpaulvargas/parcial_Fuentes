@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lista de Compras del Supermercado</title>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .encabezado {
+            color: black;
+        }
+
+        .encabezado2 {
+            color: black;
+        }
+
+        .border {
+            border-color: black;
+        }
+
+        .border2 {
+            border-color: blue;
+        }
+
+        .bg-green {
+            background-color: limegreen;
+        }
+
+        .b-green {
+            border: green;
+        }
+
+        .error {
+            border: 2px solid red;
+        }
+
+        .tachado {
+            text-decoration: line-through;
+        }
+    </style>
+</head>
+
+<body class="container mt-5">
+    <h1 id="titulo1" class="encabezado">Supermercado</h1>
+    <h1 id="titulo2" class="encabezado">Lista de Compras</h1>
+    <form id="formProducto" class="mt-4">
+        <div class="form-group">
+            <label for="nombreProducto">Nombre del producto</label>
+            <input type="text" id="nombreProducto" name="nombreProducto" class="form-control border">
+        </div>
+        <div class="form-group">
+            <label for="precioProducto">Precio del producto</label>
+            <input type="number" id="precioProducto" name="precioProducto" class="form-control border">
+        </div>
+        <button type="button" id="addProducto" class="btn btn-success">Añadir Producto</button>
+    </form>
+
+    <table class="table table-striped mt-4" id="tablaProductos">
+        <thead>
+            <tr>
+                <th>Producto</th>
+                <th>Precio</th>
+                <th>Comprado</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+
+    <div class="mt-4">
+        <h3>Total a Pagar: Q<span id="total">0.00</span></h3>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const addProductoBtn = document.getElementById('addProducto');
+            const nombreProductoInput = document.getElementById('nombreProducto');
+            const precioProductoInput = document.getElementById('precioProducto');
+            const tablaProductos = document.getElementById('tablaProductos').querySelector('tbody');
+            const totalElement = document.getElementById('total');
+            let total = 0;
+
+            addProductoBtn.addEventListener('click', function () {
+                const nombreProducto = nombreProductoInput.value.trim();
+                const precioProducto = parseFloat(precioProductoInput.value.trim());
+
+                if (nombreProducto === '' || isNaN(precioProducto)) {
+                    alert('Por favor, ingrese un nombre de producto y un precio válido.');
+                    console.log('Error: Nombre de producto vacío o precio no válido.');
+                    return;
+                }
+
+                const fila = document.createElement('tr');
+                const columnaNombre = document.createElement('td');
+                const columnaPrecio = document.createElement('td');
+                const columnaComprado = document.createElement('td');
+                const checkboxComprado = document.createElement('input');
+
+                columnaNombre.textContent = nombreProducto;
+                columnaPrecio.textContent = precioProducto.toFixed(2);
+                checkboxComprado.type = 'checkbox';
+
+                checkboxComprado.addEventListener('change', function () {
+                    if (checkboxComprado.checked) {
+                        columnaNombre.classList.add('tachado');
+                        total += precioProducto;
+                        console.log(`Producto comprado: ${nombreProducto}, Precio: ${precioProducto}`);
+                    } else {
+                        columnaNombre.classList.remove('tachado');
+                        total -= precioProducto;
+                        console.log(`Producto desmarcado: ${nombreProducto}, Precio: ${precioProducto}`);
+                    }
+                    totalElement.textContent = total.toFixed(2);
+                    console.log(`Total actualizado: ${total.toFixed(2)}`);
+                });
+
+                columnaComprado.appendChild(checkboxComprado);
+                fila.appendChild(columnaNombre);
+                fila.appendChild(columnaPrecio);
+                fila.appendChild(columnaComprado);
+                tablaProductos.appendChild(fila);
+
+                console.log(`Producto añadido: ${nombreProducto}, Precio: ${precioProducto.toFixed(2)}`);
+
+                nombreProductoInput.value = '';
+                precioProductoInput.value = '';
+            });
+        });
+    </script>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+
+</html>
